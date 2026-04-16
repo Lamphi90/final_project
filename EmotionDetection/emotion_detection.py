@@ -14,26 +14,19 @@ def emotion_detector(text_to_analyze):
     # Set the headers required for the API request exit
     response = requests.post(url, json = myobj, headers=header) 
     # Send a POST request to the API with the text and headers 
-    # Parsing the JSON response from the API 
+    if response.status_code == 400:
+        return {'anger': None,'disgust': None,'fear': None,'joy': None,'sadness': None,'dominant_emotion': None}
+    # Parsing the JSON response from the API     
     formatted_response = json.loads(response.text)
-    emotionScores = {}
-    if response.status_code == 200:
-        # Extracting sentiment label and score from the response 
-        emotionScores = formatted_response['emotionPredictions'][0]['emotion']
-        anger_score = emotionScores['anger']
-        disgust_score = emotionScores['disgust']
-        fear_score = emotionScores['fear']
-        joy_score = emotionScores['joy']
-        sadness_score = emotionScores['sadness']
-        dominant_emotion = max(emotionScores, key=emotionScores.get)
-    elif response.status_code == 400:
-        anger_score = None
-        disgust_score = None
-        fear_score = None
-        joy_score = None
-        sadness_score = None
-        dominant_emotion = None
-
+    # Extracting emotions and their scores from the response 
+    emotionScores = formatted_response['emotionPredictions'][0]['emotion']
+    anger_score = emotionScores['anger']
+    disgust_score = emotionScores['disgust']
+    fear_score = emotionScores['fear']
+    joy_score = emotionScores['joy']
+    sadness_score = emotionScores['sadness']
+    dominant_emotion = max(emotionScores, key=emotionScores.get)
+    
     return  {'anger': anger_score,
             'disgust': disgust_score,
             'fear': fear_score,
