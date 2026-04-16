@@ -1,0 +1,3 @@
+
+    if text_to_analyze == '':
+        return "Invalid text! Please try again!."
